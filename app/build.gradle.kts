@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "cl.joseramos.android.iplacex_programacion2_examen"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "cl.joseramos.android.iplacex_programacion2_examen"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
