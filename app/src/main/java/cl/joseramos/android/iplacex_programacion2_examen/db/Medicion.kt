@@ -10,6 +10,10 @@ data class Medicion(
     val codigo: String,
     val fecha: LocalDate,
     val tipo: String
-){
+)
 
+enum class TipoMedidor {
+    AGUA,
+    LUZ,
+    GAS
 }
