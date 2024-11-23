@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -49,6 +51,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cl.joseramos.android.iplacex_programacion2_examen.db.BaseDatos
 import cl.joseramos.android.iplacex_programacion2_examen.db.Medicion
+import cl.joseramos.android.iplacex_programacion2_examen.ui.ListaMedicionesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,6 +60,7 @@ import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,8 +92,15 @@ fun AppMediciones (
 @Preview(showSystemUi = true)
 @Composable
 fun ListadoUI(
-    onClickIrAIngreso:() -> Unit = {}
+    onClickIrAIngreso:() -> Unit = {},
+    vmListaMediciones: ListaMedicionesViewModel = viewModel(factory = ListaMedicionesViewModel.Factory)
 ) {
+
+    // Se ejecuta una vez al iniciar el composable
+    LaunchedEffect(Unit) {
+        vmListaMediciones.obtenerMediciones()
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -103,7 +114,11 @@ fun ListadoUI(
             Column (
                 modifier = Modifier.padding(padding)
             ) {
-                Text("Pantalla listado mediciones")
+                LazyColumn {
+                    items(vmListaMediciones.mediciones) {
+                        Text(it.codigo)
+                    }
+                }
             }
         }
     )
@@ -116,10 +131,16 @@ val HORIZONAL_PADDING = 20.dp
 @Preview(showSystemUi = true)
 @Composable
 fun IngresoUI(
-    onClickIrAListado:() -> Unit = {}
+    onClickIrAListado:() -> Unit = {},
+    vmListaMediciones: ListaMedicionesViewModel = viewModel(factory = ListaMedicionesViewModel.Factory)
 ) {
     val contexto = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    // Se ejecuta una vez al iniciar el composable
+    LaunchedEffect(Unit) {
+        vmListaMediciones.obtenerMediciones()
+    }
 
     var codigoMedidor by remember { mutableStateOf("") }
     var fechaMedicion by remember { mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())) }
@@ -195,12 +216,12 @@ fun IngresoUI(
 
                 Button(
                     onClick = {
-                        agregarMedicion(
-                            contexto,
-                            coroutineScope,
-                            codigoMedidor,
-                            fechaMedicion,
-                            tipoMedidor
+                        vmListaMediciones.insertarMedicion(
+                            Medicion(
+                                codigo = codigoMedidor,
+                                fecha = LocalDate.parse(fechaMedicion),
+                                tipo = tipoMedidor
+                            )
                         )
 
                     }
@@ -213,17 +234,15 @@ fun IngresoUI(
 
 }
 
-fun agregarMedicion(contexto: Context, coroutineScope:CoroutineScope, codigo:String, fecha:String, tipo:String) {
-    coroutineScope.launch(Dispatchers.IO) {
-        val db = BaseDatos.getInstance(contexto)
-        val dao  = db.medicionDao()
-        val fechaConvertida = LocalDate.parse(fecha)
-        val medicion = Medicion(
-            codigo = codigo,
-            fecha = fechaConvertida,
-            tipo = tipo
-        )
-        dao.insertAll(medicion)
-    }
+/*
+val db = BaseDatos.getInstance(contexto)
+val dao  = db.medicionDao()
+val fechaConvertida = LocalDate.parse(fecha)
+val medicion = Medicion(
+    codigo = codigo,
+    fecha = fechaConvertida,
+    tipo = tipo
+)
+dao.insertAll(medicion)
 
-}
+ */
