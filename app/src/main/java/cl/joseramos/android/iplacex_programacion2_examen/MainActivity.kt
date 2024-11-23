@@ -58,23 +58,26 @@ fun AppMediciones (
 ) {
     NavHost(
         navController = navController,
-        startDestination = "listadoMediciones"
+        startDestination = "listado"
     ) {
-        composable("listadoMediciones") {
-            PageListadoMedicionesUI(navController)
+        composable("listado") {
+            ListadoUI(onClickIrAIngreso = {navController.navigate("ingreso")})
         }
-        composable("formularioIngresoMedicion") {
-            PageFormularioIngresoMedicionUI()
+        composable("ingreso") {
+            IngresoUI(onClickIrAListado = {navController.navigate("listado")})
         }
     }
 }
 
+@Preview(showSystemUi = true)
 @Composable
-fun PageListadoMedicionesUI(navController: NavHostController) {
+fun ListadoUI(
+    onClickIrAIngreso:() -> Unit = {}
+) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {navController.navigate("formularioIngresoMedicion")}
+                onClick = {onClickIrAIngreso()}
             ) {
                 Icon(Icons.Filled.Add, "Registrar medidor")
             }
@@ -96,7 +99,9 @@ val HORIZONAL_PADDING = 20.dp
 
 @Preview(showSystemUi = true)
 @Composable
-fun PageFormularioIngresoMedicionUI() {
+fun IngresoUI(
+    onClickIrAListado:() -> Unit = {}
+) {
     var codigoMedidor by remember { mutableStateOf("") }
     var fecha by remember { mutableStateOf("") }
     var tipoMedidor by remember { mutableStateOf("agua") }
