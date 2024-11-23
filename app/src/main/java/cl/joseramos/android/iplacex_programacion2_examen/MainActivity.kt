@@ -4,44 +4,82 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import cl.joseramos.android.iplacex_programacion2_examen.ui.theme.Iplacex_programacion2_examenTheme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Iplacex_programacion2_examenTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            AppMediciones()
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun AppMediciones (
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(
+        navController = navController,
+        startDestination = "listadoMediciones"
+    ) {
+        composable("listadoMediciones") {
+            PageListadoMedicionesUI(navController)
+        }
+        composable("formularioIngresoMedicion") {
+            PageFormularioIngresoMedicionUI()
+        }
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    Iplacex_programacion2_examenTheme {
-        Greeting("Android")
-    }
+fun PageListadoMedicionesUI(navController: NavHostController) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {navController.navigate("formularioIngresoMedicion")}
+            ) {
+                Icon(Icons.Filled.Add, "Registrar medidor")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        content = { padding ->
+            Column (
+                modifier = Modifier.padding(padding)
+            ) {
+                Text("Pantalla listado mediciones")
+            }
+        }
+    )
+
+
+}
+
+@Composable
+fun PageFormularioIngresoMedicionUI() {
+    Scaffold(
+        content = { padding ->
+            Column (
+                modifier = Modifier.padding(padding)
+            ) {
+                Text("Pantalla formulario ingreso medicion")
+            }
+        }
+    )
+
 }
