@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kspPlugin)
 }
 
 android {
@@ -58,4 +59,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     // navegación
     implementation(libs.androidx.navigation.compose)
+    // ROOM
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
