@@ -57,5 +57,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     // navegación
-    implementation("androidx.navigation:navigation-compose:2.8.4")
+    implementation(libs.androidx.navigation.compose)
 }
