@@ -1,6 +1,9 @@
 package cl.joseramos.android.iplacex_programacion2_examen
 
+import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
+import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,12 +29,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +47,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cl.joseramos.android.iplacex_programacion2_examen.db.BaseDatos
+import cl.joseramos.android.iplacex_programacion2_examen.db.Medicion
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,8 +118,11 @@ val HORIZONAL_PADDING = 20.dp
 fun IngresoUI(
     onClickIrAListado:() -> Unit = {}
 ) {
+    val contexto = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
     var codigoMedidor by remember { mutableStateOf("") }
-    var fecha by remember { mutableStateOf("") }
+    var fechaMedicion by remember { mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())) }
     var tipoMedidor by remember { mutableStateOf("agua") }
     Scaffold(
         content = { padding ->
@@ -130,8 +149,8 @@ fun IngresoUI(
                 )
                 TextField(
                     label = { Text("Fecha") },
-                    value = fecha,
-                    onValueChange = { fecha = it },
+                    value = fechaMedicion,
+                    onValueChange = { fechaMedicion = it },
                     modifier = Modifier
                         .padding(horizontal = HORIZONAL_PADDING)
                         .height(56.dp)
@@ -175,12 +194,36 @@ fun IngresoUI(
                 }
 
                 Button(
-                    onClick = {}
+                    onClick = {
+                        agregarMedicion(
+                            contexto,
+                            coroutineScope,
+                            codigoMedidor,
+                            fechaMedicion,
+                            tipoMedidor
+                        )
+
+                    }
                 ) {
                     Text("Registrar medición")
                 }
             }
         }
     )
+
+}
+
+fun agregarMedicion(contexto: Context, coroutineScope:CoroutineScope, codigo:String, fecha:String, tipo:String) {
+    coroutineScope.launch(Dispatchers.IO) {
+        val db = BaseDatos.getInstance(contexto)
+        val dao  = db.medicionDao()
+        val fechaConvertida = LocalDate.parse(fecha)
+        val medicion = Medicion(
+            codigo = codigo,
+            fecha = fechaConvertida,
+            tipo = tipo
+        )
+        dao.insertAll(medicion)
+    }
 
 }
