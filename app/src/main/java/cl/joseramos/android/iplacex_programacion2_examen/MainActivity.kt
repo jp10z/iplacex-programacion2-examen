@@ -304,12 +304,18 @@ fun IngresoUI(
 
                 Button(
                     onClick = {
+                        // validaciones, en caso de que ocurra un error se gatilla un toast
+                        // y no se ejecuta el ingreso en la Base de datos
                         var validationOk: Boolean = true
+                        // validar la fecha mediante una conversión
                         try {
                             LocalDate.parse(fechaMedicion).toString()
                         }catch(e: Exception) {
                             validationOk = false
                         }
+                        // validar si el valor es vacío, no es necesario validar si es número
+                        // ya que fuerzo que solo se ingresen numeros mediante el onValueChange
+                        // del widget
                         if (valorMedidor == "") validationOk = false
                         if (validationOk) {
                             // se inserta la medición mediante el viewModel, este tiene la corutina
@@ -325,6 +331,7 @@ fun IngresoUI(
                             // se redirige a la pantalla de listado
                             onClickIrAListado()
                         }else{
+                            // gatillar toast en caso de error
                             Toast.makeText(contexto, contexto.getString(R.string.text_toast_error_al_guardar), Toast.LENGTH_SHORT).show()
                         }
                     }
