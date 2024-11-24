@@ -9,4 +9,5 @@
     <string name="text_tipo_luz">Electricity</string>
     <string name="text_tipo_gas">Gas</string>
     <string name="text_btn_registrar_medicion">Save Measurement</string>
+    <string name="text_toast_medicion_agregada">Measurement added successfully</string>
 </resources>

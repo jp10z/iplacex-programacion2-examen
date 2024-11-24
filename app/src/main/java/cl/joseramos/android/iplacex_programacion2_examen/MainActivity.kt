@@ -2,6 +2,7 @@ package cl.joseramos.android.iplacex_programacion2_examen
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -78,10 +79,13 @@ fun AppMediciones (
         startDestination = "listado"
     ) {
         composable("listado") {
-            ListadoUI(onClickIrAIngreso = {navController.navigate("ingreso")})
+            ListadoUI(onClickIrAIngreso = {navController.navigate("ingreso") })
         }
         composable("ingreso") {
-            IngresoUI(onClickIrAListado = {navController.navigate("listado")})
+            IngresoUI(onClickIrAListado = {navController.navigate("listado")
+            // Limpio el historial de navegación para que al presionar el botón atrás no vuelva
+            // a la pantalla de registro
+            {  popUpTo("listado") { inclusive = true } } })
         }
     }
 }
@@ -300,6 +304,7 @@ fun IngresoUI(
 
                 Button(
                     onClick = {
+                        // se inserta la medición mediante el viewModel, este tiene la corutina
                         vmListaMediciones.insertarMedicion(
                             Medicion(
                                 valor = valorMedidor.toIntOrNull() ?: 0,
@@ -307,6 +312,9 @@ fun IngresoUI(
                                 tipo = tipoMedidor
                             )
                         )
+                        // se muestra toast con la confirmación
+                        Toast.makeText(contexto, contexto.getString(R.string.text_toast_medicion_agregada), Toast.LENGTH_SHORT).show()
+                        // se redirige a la pantalla de listado
                         onClickIrAListado()
                     }
                 ) {

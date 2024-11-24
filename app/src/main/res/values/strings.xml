@@ -8,4 +8,5 @@
     <string name="text_tipo_luz">Luz</string>
     <string name="text_tipo_gas">Gas</string>
     <string name="text_btn_registrar_medicion">Registrar medición</string>
+    <string name="text_toast_medicion_agregada">Medición agregada correctamente</string>
 </resources>
