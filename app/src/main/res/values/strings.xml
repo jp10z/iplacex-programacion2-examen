@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">iplacex_programacion2_examen</string>
+    <string name="text_medidor" >Medidor</string>
+    <string name="text_registro_medidor">Registro Medidor</string>
+    <string name="text_fecha">Fecha</string>
+    <string name="text_medidor_de">Medidor de</string>
+    <string name="text_tipo_agua">Agua</string>
+    <string name="text_tipo_luz">Luz</string>
+    <string name="text_tipo_gas">Gas</string>
+    <string name="text_btn_registrar_medicion">Registrar medición</string>
 </resources>

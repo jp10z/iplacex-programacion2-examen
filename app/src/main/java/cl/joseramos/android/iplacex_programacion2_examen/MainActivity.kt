@@ -1,5 +1,6 @@
 package cl.joseramos.android.iplacex_programacion2_examen
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -114,25 +115,41 @@ fun ListadoUI(
                     items(vmListaMediciones.mediciones) {
                         Column {
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp)
+                                    .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceAround,
                                 verticalAlignment = Alignment.CenterVertically,
                             ){
                                 // Se utiliza row para mostrar el icono del tipo junto a su nombre
                                 Row (
-                                    verticalAlignment = Alignment.CenterVertically
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(2f)
                                 ) {
                                     IconoTipoMedidor(it)
-                                    Text(it.tipo)
+                                    TextoTipoMedidor(it)
                                 }
                                 // Mostrar codigo del medidor
                                 // se utiliza separador de miles como en Chile
-                                Text(
-                                    NumberFormat.getNumberInstance(
-                                        Locale("es", "CL")
-                                    ).format(it.valor))
+                                Row(
+                                    horizontalArrangement = Arrangement.End,
+                                    modifier = Modifier.weight(2f)
+                                ){
+                                    Text(
+                                        NumberFormat.getNumberInstance(
+                                            Locale("es", "CL")
+                                        ).format(it.valor)
+                                    )
+                                }
+
                                 // Mostrar fecha, se convierte a string
-                                Text(localDateToString(it.fecha))
+                                Row(
+                                    horizontalArrangement = Arrangement.End,
+                                    modifier = Modifier.weight(3f)
+                                ){
+                                    Text(localDateToString(it.fecha))
+                                }
                             }
                             // Separación horizontal para separar las mediciones
                             HorizontalDivider(thickness = 1.dp)
@@ -168,6 +185,18 @@ fun IconoTipoMedidor(medicion: Medicion) {
     }
 }
 
+@Composable
+fun TextoTipoMedidor(medicion: Medicion) {
+    // almacenar contexto para leer los string de traducción
+    val contexto = LocalContext.current
+    // retornar composable texto con la traducción lista
+    when(TipoMedidor.valueOf(medicion.tipo)) {
+        TipoMedidor.AGUA -> Text(contexto.getString(R.string.text_tipo_agua))
+        TipoMedidor.LUZ -> Text(contexto.getString(R.string.text_tipo_luz))
+        TipoMedidor.GAS -> Text(contexto.getString(R.string.text_tipo_gas))
+    }
+}
+
 fun localDateToString(date: LocalDate, pattern: String = "yyyy-MM-dd"): String {
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return date.format(formatter)
@@ -200,7 +229,7 @@ fun IngresoUI(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Registro Medidor",
+                    contexto.getString(R.string.text_registro_medidor),
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
@@ -208,7 +237,7 @@ fun IngresoUI(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 TextField(
-                    label = { Text("Medidor") },
+                    label = { Text(contexto.getString(R.string.text_medidor)) },
                     value = valorMedidor,
                     // Limitar carácteres a solo digitos numéricos
                     // lo que se hace es básicamente sobreescribir el mutableState si todos
@@ -224,7 +253,7 @@ fun IngresoUI(
                         .fillMaxWidth(),
                 )
                 TextField(
-                    label = { Text("Fecha") },
+                    label = { Text(contexto.getString(R.string.text_fecha)) },
                     value = fechaMedicion,
                     onValueChange = { fechaMedicion = it },
                     modifier = Modifier
@@ -239,7 +268,7 @@ fun IngresoUI(
                         .fillMaxWidth()
                         .align(Alignment.Start)
                 ) {
-                    Text(text = "Medidor de:")
+                    Text(text = "${contexto.getString(R.string.text_medidor_de)}:")
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -247,7 +276,7 @@ fun IngresoUI(
                             selected = tipoMedidor == TipoMedidor.AGUA.toString(),
                             onClick = { tipoMedidor = TipoMedidor.AGUA.toString() }
                         )
-                        Text(text = "Agua")
+                        Text(text = contexto.getString(R.string.text_tipo_agua))
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -256,7 +285,7 @@ fun IngresoUI(
                             selected = tipoMedidor == TipoMedidor.LUZ.toString(),
                             onClick = { tipoMedidor = TipoMedidor.LUZ.toString() }
                         )
-                        Text(text = "Luz")
+                        Text(text = contexto.getString(R.string.text_tipo_luz))
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -265,7 +294,7 @@ fun IngresoUI(
                             selected = tipoMedidor == TipoMedidor.GAS.toString(),
                             onClick = { tipoMedidor = TipoMedidor.GAS.toString() }
                         )
-                        Text(text = "Gas")
+                        Text(text = contexto.getString(R.string.text_tipo_gas))
                     }
                 }
 
@@ -281,7 +310,7 @@ fun IngresoUI(
                         onClickIrAListado()
                     }
                 ) {
-                    Text("Registrar medición")
+                    Text(contexto.getString(R.string.text_btn_registrar_medicion))
                 }
             }
         }

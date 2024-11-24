@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">iplacex_programacion2_examen</string>
+    <string name="text_medidor" >Meter</string>
+    <string name="text_registro_medidor">Meter Record</string>
+    <string name="text_fecha">Date</string>
+    <string name="text_medidor_de">Meter for</string>
+    <string name="text_tipo_agua">Water</string>
+    <string name="text_tipo_luz">Electricity</string>
+    <string name="text_tipo_gas">Gas</string>
+    <string name="text_btn_registrar_medicion">Save Measurement</string>
+</resources>
