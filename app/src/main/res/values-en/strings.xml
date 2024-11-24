@@ -10,4 +10,5 @@
     <string name="text_tipo_gas">Gas</string>
     <string name="text_btn_registrar_medicion">Save Measurement</string>
     <string name="text_toast_medicion_agregada">Measurement added successfully</string>
+    <string name="text_toast_error_al_guardar">Error saving, please validate the form</string>
 </resources>

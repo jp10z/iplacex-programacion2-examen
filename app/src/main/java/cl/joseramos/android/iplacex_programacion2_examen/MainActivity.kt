@@ -304,18 +304,29 @@ fun IngresoUI(
 
                 Button(
                     onClick = {
-                        // se inserta la medición mediante el viewModel, este tiene la corutina
-                        vmListaMediciones.insertarMedicion(
-                            Medicion(
-                                valor = valorMedidor.toIntOrNull() ?: 0,
-                                fecha = LocalDate.parse(fechaMedicion),
-                                tipo = tipoMedidor
+                        var validationOk: Boolean = true
+                        try {
+                            LocalDate.parse(fechaMedicion).toString()
+                        }catch(e: Exception) {
+                            validationOk = false
+                        }
+                        if (valorMedidor == "") validationOk = false
+                        if (validationOk) {
+                            // se inserta la medición mediante el viewModel, este tiene la corutina
+                            vmListaMediciones.insertarMedicion(
+                                Medicion(
+                                    valor = valorMedidor.toIntOrNull() ?: 0,
+                                    fecha = LocalDate.parse(fechaMedicion),
+                                    tipo = tipoMedidor
+                                )
                             )
-                        )
-                        // se muestra toast con la confirmación
-                        Toast.makeText(contexto, contexto.getString(R.string.text_toast_medicion_agregada), Toast.LENGTH_SHORT).show()
-                        // se redirige a la pantalla de listado
-                        onClickIrAListado()
+                            // se muestra toast con la confirmación
+                            Toast.makeText(contexto, contexto.getString(R.string.text_toast_medicion_agregada), Toast.LENGTH_SHORT).show()
+                            // se redirige a la pantalla de listado
+                            onClickIrAListado()
+                        }else{
+                            Toast.makeText(contexto, contexto.getString(R.string.text_toast_error_al_guardar), Toast.LENGTH_SHORT).show()
+                        }
                     }
                 ) {
                     Text(contexto.getString(R.string.text_btn_registrar_medicion))
@@ -323,5 +334,4 @@ fun IngresoUI(
             }
         }
     )
-
 }
