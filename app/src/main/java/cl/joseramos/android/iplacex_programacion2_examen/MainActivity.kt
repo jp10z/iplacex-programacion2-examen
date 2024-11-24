@@ -1,7 +1,5 @@
 package cl.joseramos.android.iplacex_programacion2_examen
 
-import android.graphics.drawable.Drawable
-import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,7 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -105,7 +102,7 @@ fun ListadoUI(
             FloatingActionButton(
                 onClick = {onClickIrAIngreso()}
             ) {
-                Icon(Icons.Filled.Add, "Registrar medidor")
+                Icon(Icons.Filled.Add, "Registrar medición")
             }
         },
         floatingActionButtonPosition = FabPosition.End,
@@ -133,7 +130,7 @@ fun ListadoUI(
                                 Text(
                                     NumberFormat.getNumberInstance(
                                         Locale("es", "CL")
-                                    ).format(it.codigo))
+                                    ).format(it.valor))
                                 // Mostrar fecha, se convierte a string
                                 Text(localDateToString(it.fecha))
                             }
@@ -193,7 +190,7 @@ fun IngresoUI(
         vmListaMediciones.obtenerMediciones()
     }
 
-    var codigoMedidor by remember { mutableStateOf("") }
+    var valorMedidor by remember { mutableStateOf("") }
     var fechaMedicion by remember { mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())) }
     var tipoMedidor by remember { mutableStateOf(TipoMedidor.AGUA.toString()) }
     Scaffold(
@@ -212,13 +209,13 @@ fun IngresoUI(
                 )
                 TextField(
                     label = { Text("Medidor") },
-                    value = codigoMedidor,
+                    value = valorMedidor,
                     // Limitar carácteres a solo digitos numéricos
                     // lo que se hace es básicamente sobreescribir el mutableState si todos
                     // los carácteres son numéricos, sino ignora el seteo
                     onValueChange = {
                         if (it.all { char -> char.isDigit() }) {
-                            codigoMedidor = it
+                            valorMedidor = it
                         }
                     },
                     modifier = Modifier
@@ -276,12 +273,12 @@ fun IngresoUI(
                     onClick = {
                         vmListaMediciones.insertarMedicion(
                             Medicion(
-                                codigo = codigoMedidor.toIntOrNull() ?: 0,
+                                valor = valorMedidor.toIntOrNull() ?: 0,
                                 fecha = LocalDate.parse(fechaMedicion),
                                 tipo = tipoMedidor
                             )
                         )
-
+                        onClickIrAListado()
                     }
                 ) {
                     Text("Registrar medición")
