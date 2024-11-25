@@ -35,6 +35,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+// Este composable representa la pantalla que muestra el listado de mediciones
 @Preview(showSystemUi = true)
 @Composable
 fun ListadoUI(
@@ -42,12 +43,15 @@ fun ListadoUI(
     vmListaMediciones: ListaMedicionesViewModel = viewModel(factory = ListaMedicionesViewModel.Factory)
 ) {
 
-    // Se ejecuta una vez al iniciar el composable
+    // Recargo la lista de mediciones cuándo inicio el composable
     LaunchedEffect(Unit) {
         vmListaMediciones.obtenerMediciones()
     }
 
     Scaffold(
+        // Agrego el floating icon mostrado en la zona inferior derecha de la pantalla
+        // Este al hacer click llama a la función onClickIrAIngreso que se pasa desde el padre
+        // para navegar a la pantalla de creación mediante callback
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {onClickIrAIngreso()}
@@ -71,11 +75,13 @@ fun ListadoUI(
                                 horizontalArrangement = Arrangement.SpaceAround,
                                 verticalAlignment = Alignment.CenterVertically,
                             ){
-                                // Se utiliza row para mostrar el icono del tipo junto a su nombre
+                                // Se utiliza row para agrupar el icono y el texto del tipo
+                                // de esta manera siempre quedarán juntos
                                 Row (
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.weight(2f)
                                 ) {
+                                    // Obtengo el icono y el texto del tipo desde sub-composables
                                     IconoTipoMedidor(it)
                                     TextoTipoMedidor(it)
                                 }
@@ -146,6 +152,7 @@ fun TextoTipoMedidor(medicion: Medicion) {
     }
 }
 
+// Función que utilizo para convertir las fechas que vienen desde la BD en string
 fun localDateToString(date: LocalDate, pattern: String = "yyyy-MM-dd"): String {
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return date.format(formatter)

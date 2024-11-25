@@ -17,18 +17,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            // se invoca al composable principal
             AppMediciones()
         }
     }
 }
 
+// Composable principal que contiene el navhost que se encarga de manejar
+// el routing de la aplicación
 @Composable
 fun AppMediciones (
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
-        startDestination = "listado"
+        startDestination = "listado" // UI por defecto
     ) {
         composable("listado") {
             ListadoUI(onClickIrAIngreso = {navController.navigate("ingreso") })

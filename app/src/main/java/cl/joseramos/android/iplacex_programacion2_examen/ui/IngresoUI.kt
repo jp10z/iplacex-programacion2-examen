@@ -45,20 +45,18 @@ fun IngresoUI(
     onClickIrAListado:() -> Unit = {},
     vmListaMediciones: ListaMedicionesViewModel = viewModel(factory = ListaMedicionesViewModel.Factory)
 ) {
+    // almaceno el contexto, que me servirá para leer las traducciones
     val contexto = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
-    // Se ejecuta una vez al iniciar el composable
-    LaunchedEffect(Unit) {
-        vmListaMediciones.obtenerMediciones()
-    }
-
+    // mutableStates para almacenar los valores del formulario
     var valorMedidor by remember { mutableStateOf("") }
     var fechaMedicion by remember { mutableStateOf(
         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
             Date()
         )) }
     var tipoMedidor by remember { mutableStateOf(TipoMedidor.AGUA.toString()) }
+
+
     Scaffold(
         content = { padding ->
             Column (
@@ -73,6 +71,7 @@ fun IngresoUI(
                     ),
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
+                // TextFied del valor del medidor
                 TextField(
                     label = { Text(contexto.getString(R.string.text_medidor)) },
                     value = valorMedidor,
@@ -89,6 +88,7 @@ fun IngresoUI(
                         .height(56.dp)
                         .fillMaxWidth(),
                 )
+                // TextField de la fecha de medición
                 TextField(
                     label = { Text(contexto.getString(R.string.text_fecha)) },
                     value = fechaMedicion,
@@ -98,6 +98,8 @@ fun IngresoUI(
                         .height(56.dp)
                         .fillMaxWidth()
                 )
+                // Creo una nueva columna para resetear el alineamiento y para organizar mejor
+                // los RadioButtons
                 Column(
                     modifier = Modifier
                         .padding(horizontal = HORIZONAL_PADDING)
@@ -135,6 +137,7 @@ fun IngresoUI(
                     }
                 }
 
+                // Botón de guardado
                 Button(
                     onClick = {
                         // validaciones, en caso de que ocurra un error se gatilla un toast

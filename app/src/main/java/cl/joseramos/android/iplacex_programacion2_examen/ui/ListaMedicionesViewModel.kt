@@ -30,6 +30,7 @@ class ListaMedicionesViewModel(val medicionDao:MedicionDao): ViewModel() {
         }
     }
 
+    // Función para recargar el listado de mediciones desde la Base de datos
     fun obtenerMediciones(): List<Medicion> {
         viewModelScope.launch(Dispatchers.IO) {
             mediciones = medicionDao.getAll()
@@ -37,7 +38,7 @@ class ListaMedicionesViewModel(val medicionDao:MedicionDao): ViewModel() {
         return mediciones
     }
 
-    // pendiente (quizás no sea necesario)
+    // Función para insertar una medición en la base de datos
     fun insertarMedicion(medicion: Medicion){
         viewModelScope.launch(Dispatchers.IO) {
             medicionDao.insertAll(medicion)
